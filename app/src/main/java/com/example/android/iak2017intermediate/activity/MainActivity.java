@@ -4,23 +4,37 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.widget.Toast;
 
+import com.example.android.iak2017intermediate.BuildConfig;
 import com.example.android.iak2017intermediate.R;
 import com.example.android.iak2017intermediate.adapter.NewsAdapter;
+import com.example.android.iak2017intermediate.adapter.NewsClickListener;
+import com.example.android.iak2017intermediate.model.APIResponse;
 import com.example.android.iak2017intermediate.model.ArticlesItem;
+import com.example.android.iak2017intermediate.rest.ApiClient;
+import com.example.android.iak2017intermediate.rest.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NewsClickListener {
 
     @BindView(R.id.recyclerView) RecyclerView mRecyclerView;
 
     private LinearLayoutManager mLayoutManager;
-    private NewsAdapter mAdapter;
+    private NewsAdapter mAdapterDummy;
+    private NewsAdapter mAdapterApi;
+    private final String NEWS_SOURCE = "mtv-news";
+    private List<ArticlesItem> mArticleItems = new ArrayList<>();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +48,13 @@ public class MainActivity extends AppCompatActivity {
                 false
         );
 
-        mAdapter = new NewsAdapter(getDummyData());
-
+        //mAdapterDummy = new NewsAdapter(getDummyData());
+        mAdapterApi = new NewsAdapter(mArticleItems);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+
+        getData();
+        mRecyclerView.setAdapter(mAdapterApi);
+        mAdapterApi.setItemClickListener(this);
 
     }
 
@@ -53,5 +70,36 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return dummyList;
+    }
+
+    private void getData(){
+        ApiService apiService = ApiClient.getRetrofitClient().create(ApiService.class);
+        Call<APIResponse> apiResponseCall = apiService.getArticles(
+                NEWS_SOURCE,
+                BuildConfig.API_KEY
+        );
+        apiResponseCall.enqueue(new Callback<APIResponse>() {
+            @Override
+            public void onResponse(Call<APIResponse> call, Response<APIResponse> response) {
+                APIResponse apiResponse = response.body();
+                if(apiResponse != null){
+                    mArticleItems = apiResponse.getArticles();
+                    mAdapterApi.setData(mArticleItems);
+                    //mAdapterApi.notifyDataSetChanged();
+                    //mRecyclerView.notifyAll();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Call failed: "+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onFailure: "+t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void onItemNewsClicked(ArticlesItem newsItem) {
+        Toast.makeText(this, newsItem.getTitle(), Toast.LENGTH_SHORT).show();
     }
 }

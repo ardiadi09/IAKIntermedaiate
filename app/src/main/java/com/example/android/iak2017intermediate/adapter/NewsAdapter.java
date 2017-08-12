@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,8 +25,8 @@ import butterknife.ButterKnife;
  */
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
-
     List<ArticlesItem> mNewsList;
+    private NewsClickListener newsClickListener;
 
     public NewsAdapter(List<ArticlesItem> mNewsList) {
         this.mNewsList = mNewsList;
@@ -40,11 +41,32 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
 
     @Override
-    public void onBindViewHolder(NewsViewHolder holder, int position) {
+    public void onBindViewHolder(NewsViewHolder holder, final int position) {
         ArticlesItem news = mNewsList.get(position);
         holder.bind(news);
+        holder.btnReadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(newsClickListener != null){
+                    newsClickListener.onItemNewsClicked(
+                            mNewsList.get(position)
+                    );
+                }
+            }
+        });
     }
 
+    public void setData(List<ArticlesItem> datas){
+        mNewsList.clear();
+        mNewsList.addAll(datas);
+        notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(NewsClickListener clickListener){
+        if(clickListener != null){
+            this.newsClickListener = clickListener;
+        }
+    }
     @Override
     public int getItemCount() {
         return mNewsList.size();
@@ -55,7 +77,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         @BindView(R.id.ivNewsPhoto) ImageView ivNewsPhoto;
         @BindView(R.id.tvNewsTitle) TextView tvNewsTitle;
         @BindView(R.id.tvNewsDescription) TextView tvNewsDescription;
-
+        @BindView(R.id.btnReadMore) Button btnReadMore;
 
         public NewsViewHolder(View itemView) {
             super(itemView);
@@ -73,5 +95,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
 
     }
+
 
 }
