@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             dummyNews.setTitle("News Title for Data #" + String.valueOf(i+1));
             dummyNews.setDescription("News Description for Data #" + String.valueOf(i+1));
             dummyNews.setUrlToImage("https://s-media-cache-ak0.pinimg.com/originals/35/32/b5/3532b50d1d23fc5c85796110ffbe799e.jpg");
-
+            //FOR EXAMPLE ONLY
             dummyList.add(dummyNews);
         }
 
