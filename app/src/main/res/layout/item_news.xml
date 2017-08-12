@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="?attr/listPreferredItemPaddingRight"
+    android:layout_marginLeft="?attr/listPreferredItemPaddingLeft"
+    android:layout_marginTop="@dimen/card_top_margin">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivNewsPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="220dp" />
+
+        <TextView
+            android:id="@+id/tvNewsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:text="News title goes here"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:paddingRight="@dimen/padding_title"
+            android:paddingLeft="@dimen/padding_title"
+            android:paddingTop="@dimen/padding_top_bottom"
+            android:paddingBottom="@dimen/padding_top_bottom" />
+
+        <TextView
+            android:id="@+id/tvNewsDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="News description goes here"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:paddingRight="@dimen/padding_title"
+            android:paddingLeft="@dimen/padding_title"
+            android:paddingTop="@dimen/padding_top_bottom"
+            android:paddingBottom="@dimen/padding_top_bottom"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+</android.support.v7.widget.CardView>
