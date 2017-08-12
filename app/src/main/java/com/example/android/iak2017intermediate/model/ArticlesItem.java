@@ -1,6 +1,9 @@
 package com.example.android.iak2017intermediate.model;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+
+import org.json.JSONObject;
 
 
 public class ArticlesItem{
@@ -72,6 +75,13 @@ public class ArticlesItem{
 	}
 
 	public ArticlesItem() {
+	}
+
+	public String toJson(){
+		return new Gson().toJson(this);
+	}
+	public ArticlesItem fromJson(String newsJson){
+		return new Gson().fromJson(newsJson, ArticlesItem.class);
 	}
 
 	@Override
